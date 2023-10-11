@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-
-import { TodoitemsModule } from './todoitems/todoitems.module';
-
-const databaseUrl =
-  process.env.DATABASE_URL || 'mongodb://localhost:27017/test';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { RadarsModule } from './modules/radars/radars.module';
+import { AdminsModule } from './modules/admins/admins.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
+    RadarsModule,
+    AdminsModule,
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(databaseUrl),
-    TodoitemsModule,
+    MongooseModule.forRoot(process.env.DATABASE_URL),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
