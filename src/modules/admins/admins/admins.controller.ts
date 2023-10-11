@@ -35,7 +35,7 @@ export class AdminsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminsService.remove(id);
+  hemin(@Param('id') id: string) {
+    return this.adminsService.hemin(id);
   }
 }
