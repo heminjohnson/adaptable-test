@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
 
 import { TodoitemsModule } from './todoitems/todoitems.module';
 
@@ -10,10 +9,8 @@ const databaseUrl =
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(databaseUrl),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-    }),
     TodoitemsModule,
   ],
   controllers: [],

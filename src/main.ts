@@ -8,6 +8,7 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`App started. Listening on port ${port}`);
 }
+
 bootstrap().catch((err) => {
   console.log(`Fatal error during initialization:`, err);
   process.exit(1);
