@@ -1,19 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Item } from './entities/item.entity';
-import { items } from '../../../database/mocks/items';
-import { CreateItemDto } from "./dto/create-item.dto";
-import { UpdateItemDto } from "./dto/update-item.dto";
+import { CreateItemDto } from './dto/create-item.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ItemsService {
-  private items: Item[] = items;
+  constructor(
+    @InjectModel(Item.name) private readonly itemModel: Model<Item>,
+  ) {}
 
   findAll() {
-    return this.items;
+    return this.itemModel.find().populate('category').exec();
   }
 
-  findOne(id: string) {
-    const item = this.items.find((item) => item.id === +id);
+  async findOne(id: string) {
+    const item = await this.itemModel.findOne({ _id: id }).populate('category').exec();
     if (!item) {
       throw new NotFoundException(`Item #${id} not found`);
     }
@@ -21,20 +24,21 @@ export class ItemsService {
   }
 
   create(createItemDto: CreateItemDto) {
-    this.items.push(createItemDto);
+    const item = new this.itemModel(createItemDto);
+    return item.save();
   }
 
-  update(id: string, updateItemDto: UpdateItemDto) {
-    const existingItem = this.findOne(id);
-    if (existingItem) {
-      // update the existing entity
+  async update(id: string, updateItemDto: UpdateItemDto) {
+    const existingItem = await this.itemModel
+      .findOneAndUpdate({ _id: id }, { $set: updateItemDto }, { new: true })
+      .exec();
+
+    if (!existingItem) {
+      throw new NotFoundException(`Item #${id} not found`);
     }
   }
 
-  remove(id: string) {
-    const itemIndex = this.items.findIndex((item) => item.id === +id);
-    if (itemIndex >= 0) {
-      this.items.splice(itemIndex, 1);
-    }
+  async remove(id: string) {
+    return this.itemModel.deleteOne({ _id: id });
   }
 }

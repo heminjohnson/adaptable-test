@@ -38,7 +38,7 @@ export class AdminsService {
     }
   }
 
-  async hemin(id: string) {
+  async remove(id: string) {
     return this.adminModel.deleteOne({ _id: id });
   }
 }

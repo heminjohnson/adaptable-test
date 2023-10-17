@@ -1,29 +1,12 @@
-import { IsNumber, IsString, IsObject, ValidateNested } from 'class-validator';
-import { Type } from "class-transformer";
-
-class CategoryDTO {
-  @IsNumber()
-  readonly id: number;
-
-  @IsString()
-  readonly name: string;
-
-  @IsString()
-  readonly description: string;
-}
+import { IsString } from 'class-validator';
 
 export class CreateItemDto {
-  @IsNumber()
-  readonly id: number;
-
   @IsString()
   readonly name: string;
 
   @IsString()
   readonly description: string;
 
-  @IsObject()
-  @ValidateNested()
-  @Type(() => CategoryDTO)
-  readonly category: CategoryDTO;
+  @IsString()
+  readonly category: string;
 }
