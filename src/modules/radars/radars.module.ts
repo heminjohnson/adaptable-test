@@ -12,12 +12,15 @@ import {
   CategorySchema,
 } from './categories/entities/category.entity';
 import { Item, ItemSchema } from './items/entities/item.entity';
+import { Vote, VoteSchema } from './votes/entities/vote.entity';
+import { VotesService } from './votes/votes.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Category.name, schema: CategorySchema },
       { name: Item.name, schema: ItemSchema },
+      { name: Vote.name, schema: VoteSchema },
     ]),
   ],
   controllers: [
@@ -26,6 +29,6 @@ import { Item, ItemSchema } from './items/entities/item.entity';
     ItemsController,
     VotesController,
   ],
-  providers: [CategoriesService, ItemsService, RadarService],
+  providers: [CategoriesService, ItemsService, RadarService, VotesService],
 })
 export class RadarsModule {}

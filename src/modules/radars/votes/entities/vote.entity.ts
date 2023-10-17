@@ -1,9 +1,17 @@
-import { Item } from '../../items/entities/item.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { Document } from 'mongoose';
+import { Item } from "../../items/entities/item.entity";
 
-export class Vote {
-  id: number;
+@Schema()
+export class Vote extends Document {
+  @Prop()
   value: string;
-  timestamp: string;
-  item: Item;
+
+  @Prop()
   employeeId: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Item' })
+  item: Item;
 }
+
+export const VoteSchema = SchemaFactory.createForClass(Vote);
