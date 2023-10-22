@@ -1,9 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { Radar } from "./entities/radar.entity";
+import { Injectable } from '@nestjs/common';
+import { Radar } from './entities/radar.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Vote } from '../votes/entities/vote.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class RadarService {
-  findAll(): Radar {
+  constructor(
+    @InjectModel(Vote.name) private readonly voteModel: Model<Vote>,
+  ) {}
+  async findAll(): Promise<Radar> {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth(); // Month is zero-based (0-11)
 
@@ -11,25 +17,26 @@ export class RadarService {
     const currentQuarter = Math.floor(currentMonth / 3) + 1; // Quarters are 1-based (1-4)
     const currentYear = currentDate.getFullYear();
 
-    const trends = [
-      {
-        change: 'neutral',
-        item: {
-          id: 18,
-          name: 'YAML',
-          description:
-            'Yet another modeling language, popular for configurations or specifications',
-          category: {
-            id: 3,
-            name: 'Methods, Standards and Architectures',
-            description:
-              'How are we achieving an objective? (e.g. SAFe Framwork, Sustainable architecture, agile software development, continuous delivery, continuous testing, Mikroservices)',
-          },
+    const votes = await this.voteModel
+      .find()
+      .populate({
+        path: 'item',
+        select: '-__v',
+        populate: {
+          path: 'category',
+          select: '-__v',
         },
-        value: 'assess',
-        timestamp: '2023-08-31T10:15:30.123Z',
-      },
-    ];
+      })
+      .exec();
+
+    const trends = votes.map((vote) => {
+      return {
+        change: 'neutral',
+        value: vote.value,
+        item: vote.item,
+        timestamp: vote.updatedAt,
+      };
+    });
 
     return {
       name: `Radar Q${currentQuarter}/${currentYear}`,

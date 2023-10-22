@@ -10,6 +10,12 @@ export class Vote extends Document {
   @Prop()
   employeeId: string;
 
+  @Prop()
+  createdAt: string;
+
+  @Prop()
+  updatedAt: string;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Item' })
   item: Item;
 }

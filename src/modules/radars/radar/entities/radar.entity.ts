@@ -1,15 +1,8 @@
+import { Item } from "../../items/entities/item.entity";
+
 export class Trend {
   change: string;
-  item: {
-    id: number;
-    name: string;
-    description: string;
-    category: {
-      id: number;
-      name: string;
-      description: string;
-    };
-  };
+  item: Item;
   value: string;
   timestamp: string;
 }
