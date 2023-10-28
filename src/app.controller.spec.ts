@@ -17,6 +17,7 @@ describe('AppController', () => {
   describe('root', () => {
     it('should return Health', () => {
       expect(appController.getHealth()).toEqual({
+        app: 'TrendRadar Backend',
         message: 'Health OK',
         version: '0.1.0',
       });
